@@ -11,9 +11,9 @@ const router = new Router();
 const waiters = [];
 
 router.get('/subscribe', async (ctx, next) => {
-    next(await new Promise((resolve) => {
+    await new Promise((resolve) => {
         waiters.push({ resolve, ctx });
-    }));
+    });
 });
 
 
@@ -26,7 +26,6 @@ router.post('/publish', async (ctx, next) => {
         }
     }
     ctx.body = '';
-    next();
 });
 
 app.use(router.routes());

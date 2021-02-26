@@ -37,11 +37,14 @@ server.on('request', (req, res) => {
         limit.on('error', function (err) {
           // console.log(' << 5 l e', err.code);
           if (err.code === 'LIMIT_EXCEEDED') {
-            
             fs.unlink(filepath, () => {});
             res.statusCode = 413;
             res.end('413');
             //throw Error ('LIMIT_EXCEEDED');
+          } else {
+            fs.unlink(filepath, () => {});
+            res.statusCode = 500;
+            res.end('500');
           }
         });
       
@@ -51,10 +54,10 @@ server.on('request', (req, res) => {
             res.statusCode = 409;
             res.end('409');
           } else {
-            console.log(' << 501 2');
+            // console.log(' << 501 2');
             fs.unlink(filepath, () => {});
-            res.statusCode = 501;
-            res.end('501');
+            res.statusCode = 500;
+            res.end('500');
           };
         });
 
@@ -70,7 +73,7 @@ server.on('request', (req, res) => {
 
 
       } catch (e) {
-        console.log(' << 3', e.code);
+        // console.log(' << 3', e.code);
         if (e.code === 'ENOENT') {
           res.statusCode = 404;
           res.end('404');

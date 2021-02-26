@@ -19,23 +19,17 @@ server.on('request', (req, res) => {
         break;
       }
 
-      try {
-        const file = fs.readFileSync(filepath);
-        res.end(file);
-        break;
-
-      } catch (e) {
-        if (e.code === 'ENOENT') {
+      const readStream = fs.createReadStream(filepath);
+      readStream.pipe(res);
+      readStream.on('error', function(err) {
+        if (err.code === 'ENOENT') {
           res.statusCode = 404;
           res.end('404');
-          break;
+        } else {
+          res.statusCode = 500;
+          res.end('500');
         }
-        console.log(' ==> ', JSON.stringify(e));
-      }
-
-
-      res.statusCode = 500;
-      res.end('500');
+      })
 
       break;
 
